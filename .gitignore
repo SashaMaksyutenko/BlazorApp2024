@@ -10,7 +10,6 @@ packages/
 .nuget/
 .vs/
 *.config
-wwwroot/
 dist/
 publish/
 Generated/

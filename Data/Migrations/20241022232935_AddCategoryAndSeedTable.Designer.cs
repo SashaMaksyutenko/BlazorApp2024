@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlazorApp2024.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241022202238_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20241022232935_AddCategoryAndSeedTable")]
+    partial class AddCategoryAndSeedTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,40 @@ namespace BlazorApp2024.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("BlazorApp2024.Data.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Category");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Appetizer"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Entree"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Dessert"
+                        });
+                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {

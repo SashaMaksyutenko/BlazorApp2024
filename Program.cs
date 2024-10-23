@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using BlazorApp2024.Areas.Identity;
 using BlazorApp2024.Data;
+using BlazorApp2024.Repository.IRepository;
+using BlazorApp2024.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,10 +23,9 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddSingleton<WeatherForecastService>();
-
 var app = builder.Build();
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
