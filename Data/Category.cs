@@ -10,6 +10,6 @@ namespace BlazorApp2024.Data
     {
         public int Id { get; set; }
         [Required(ErrorMessage = "Please enter name...")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
     }
 }
