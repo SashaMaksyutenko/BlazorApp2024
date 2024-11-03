@@ -1,7 +1,12 @@
 ﻿@page "/"
 @using System.Globalization
+@inject AuthenticationStateProvider _AuthenticationStateProvider
+@inject IJSRuntime _JS
+@inject NavigationManager _NavigationManager
 @inject IProductRepository _productRepository
 @inject ICategoryRepository _categoryRepository
+@inject IShoppingCartRepository _cartRepository
+
 <PageTitle>Home</PageTitle>
 @if (IsProcessing)
 {
@@ -24,6 +29,7 @@ else
                 </div>
             </div>
         </div>
+
         <div class="content px-4 m-2">
             <ul class="nav nav-underline justify-content-center mb-2">
                 <li class="nav-item">
@@ -38,6 +44,7 @@ else
                         </span>
                     </li>
                 }
+
             </ul>
             <div class="row mt-4 mx-1">
 
@@ -65,13 +72,18 @@ else
                                 {
                                     <img class="card-img-top img-thumbnail img-rounded w-50 mt-2" src="images/default.png" style=""/>
                                 }
+
                             </div>
                             <div class="card-body">
                                 <h5 class="card-title text-center lead text-success">@prod.Name</h5>
                                 <p class="card-text mt-2">@((MarkupString)@prod.Description)</p>
                                 <h4 class="text-center">
+                                    <div class="m-lg-auto p-2" @onclick="()=>AddOrderItem(prod)">
                                     <i class="bi bi-cart3 btn btn-success text-right  px-5 form-control" > Add to cart</i>
+                                    </div>
                                 </h4>
+
+
                             </div>
                         </div>
                     </div>
@@ -80,6 +92,7 @@ else
         </div>
     </div>
 }
+
 @code{
     private IEnumerable<Product> Products = new List<Product>();
     private IEnumerable<Category> Categories = new List<Category>();
@@ -87,6 +100,8 @@ else
     private bool IsProcessing { get; set; } = true;
     private int _selectedCategoryId = 0;
     private string _searchText = "";
+
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -96,12 +111,15 @@ else
             StateHasChanged();
         }
     }
+
     private async Task LoadProducts()
     {
         Products = await _productRepository.GetAllAsync();
         Categories = await _categoryRepository.GetAllAsync();
         FilterProducts(0);
     }
+
+
     private void FilterProducts(int categoryId)
     {
         if (categoryId == 0)
@@ -117,6 +135,7 @@ else
             _searchText = String.Empty;
         }
     }
+
     private void FilterProductByName(string newValueOfSearchText)
     {
         if (string.IsNullOrWhiteSpace(newValueOfSearchText))
@@ -130,8 +149,34 @@ else
         }
         _searchText = newValueOfSearchText;
     }
+
     private string GetActiveTabClass(int categoryId)
     {
         return categoryId == _selectedCategoryId ? "active" : string.Empty;
+    }
+    private async Task AddOrderItem(Product product)
+    {
+        var authState = await _AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        var authenticated = user.Identity is not null && user.Identity.IsAuthenticated;
+        //if user is not authenticated then redirect to login
+        if (!authenticated)
+        {
+            _NavigationManager.NavigateTo("identity/account/login",true);
+        }
+        else
+        {
+            //add item to cart
+            var result = await 
+            _cartRepository.UpdateCartAsync(user.FindFirst(u => u.Type.Contains("nameidentifier"))?.Value, product.Id, 1);
+            if (result)
+            {
+                _JS?.ToastrSuccess("Product added to cart successfully");
+            }
+            else
+            {
+                _JS?.ToastrError("Error encountered");
+            }
+        }
     }
 }   
