@@ -11,7 +11,7 @@
 }
 else
 {
-    <div class="card shadow border-0 mt-4">
+    <div class="card shadow border-0 m-4">
         <div class="card-header bg-black bg-gradient ml-0 py-3">
             <div class="row">
                 <div class="col-12 text-center">
@@ -22,6 +22,7 @@ else
         <div class="card-body p-4">
             <EditForm Model="Category" FormName="CategoryUpsertForm" OnValidSubmit="UpsertCategory">
                 <DataAnnotationsValidator/>
+                
                 <div class="border p-3 mt-4">
                     <div class="form-floating py-3 col-12">
                         <InputText @bind-Value="Category.Name" class="form-control" id="Name" placeholder="Name" />
@@ -40,11 +41,15 @@ else
                             </a>
                         </div>
                     </div>
-                </div> 
+                </div>
+                
             </EditForm>
+            
         </div>
     </div>
 }
+
+
 @code {
     [Parameter]
     public int Id { get; set; }
@@ -64,6 +69,7 @@ else
         }
         //return base.OnAfterRenderAsync(firstRender);
     }
+
     private async Task LoadCategory()
     {
         if (Id > 0)
@@ -71,6 +77,7 @@ else
             Category = await _categoryRepository.GetAsync(Id);
         }
     }
+
     private async Task UpsertCategory()
     {
         IsProcessing = true;

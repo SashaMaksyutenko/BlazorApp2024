@@ -1,30 +1,36 @@
 ﻿@using BlazorApp2024.Utility
 @inherits LayoutComponentBase
 @inject AuthenticationStateProvider AuthenticationStateProvider
-<LoginDisplay/>
-<PageTitle>BlazorApp2024</PageTitle>
+
+<div class="page">
     <AuthorizeView Roles="@SD.Role_Admin">
         <div class="sidebar">
             <NavMenu />
         </div>
     </AuthorizeView>
-<div class="page">
+
     <main>
         @if (_navBarVisible) 
         {
             <NavBar></NavBar>
         }
-        <article class="content px-4">
             @Body
-        </article>
     </main>
 </div>
+
+<div id="blazor-error-ui" data-nosnippet>
+    An unhandled error has occurred.
+    <a href="." class="reload">Reload</a>
+    <span class="dismiss">🗙</span>
+</div>
+
 @code{
     private bool _navBarVisible;
     protected override async Task OnInitializedAsync()
     {
         _navBarVisible = await ShowNavBar();
     }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         _navBarVisible = await ShowNavBar();
@@ -45,4 +51,4 @@
         }
         return false;
     }
-} 
+}
