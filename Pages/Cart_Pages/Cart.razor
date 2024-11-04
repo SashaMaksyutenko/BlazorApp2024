@@ -4,6 +4,8 @@
 @using BlazorApp2024.Utility
 @inject AuthenticationStateProvider _AuthenticationStateProvider
 @inject IShoppingCartRepository _cartRepository
+@inject IOrderRepository _orderRepository
+@inject NavigationManager _navigationManager
 @attribute [Authorize]
 @if (IsProcessing)
 {
@@ -127,6 +129,7 @@ else
         var user = authState.User;
         OrderHeader.Email= user.FindFirst(u => u.Type.Contains("email"))?.Value;
         OrderHeader.UserId = user.FindFirst(u => u.Type.Contains("nameidentifier"))?.Value;
+        OrderHeader.Status = SD.StatusPending;
     }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -158,6 +161,10 @@ else
     }
     private async Task ProcessOrderCreation()
     {
-
+        IsProcessing= true;
+        await Task.Yield();
+        OrderHeader.OrderDetails = SD.ConvertShoppingCartListToOrderDetail(ShoppingCarts.ToList());
+        await _orderRepository.CreateAsync(OrderHeader);
+        _navigationManager.NavigateTo($"/order/confirmation/{OrderHeader.Id}");
     }
 }
