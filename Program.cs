@@ -7,6 +7,7 @@ using BlazorApp2024.Data;
 using BlazorApp2024.Repository.IRepository;
 using BlazorApp2024.Repository;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using BlazorApp2024.Services;
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
@@ -24,6 +25,7 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddRadzenComponents();
+builder.Services.AddSingleton<SharedStateService>();
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<ApplicationUser>>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
