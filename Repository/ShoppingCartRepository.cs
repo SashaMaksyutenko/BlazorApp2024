@@ -1,11 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using BlazorApp2024.Data;
 using BlazorApp2024.Repository.IRepository;
-using Microsoft.EntityFrameworkCore;
-
 namespace BlazorApp2024.Repository
 {
     public class ShoppingCartRepository : IShoppingCartRepository
@@ -15,6 +10,7 @@ namespace BlazorApp2024.Repository
         {
             _db = db;
         }
+
         public async Task<bool> ClearCartAsync(string? userId)
         {
             var cartItems = await _db.ShoppingCart.Where(u => u.UserId == userId).ToListAsync();
@@ -26,8 +22,17 @@ namespace BlazorApp2024.Repository
         {
             return await _db.ShoppingCart.Where(u => u.UserId == userId).Include(u => u.Product).ToListAsync();
         }
-
-        public async Task<bool> UpdateCartAsync(string userId, int productId, int updateBy)
+		public async Task<int> GetTotalCartCartCountAsync(string? userId)
+		{
+            int cartCount = 0;
+            var cartItems = await _db.ShoppingCart.Where(u => u.UserId == userId).ToListAsync();
+            foreach(var item in cartItems)
+            {
+                cartCount+= item.Count;
+            }
+			return cartCount;
+		}
+		public async Task<bool> UpdateCartAsync(string userId, int productId, int updateBy)
         {
             if (string.IsNullOrEmpty(userId))
             {

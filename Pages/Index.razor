@@ -6,7 +6,6 @@
 @inject IProductRepository _productRepository
 @inject ICategoryRepository _categoryRepository
 @inject IShoppingCartRepository _cartRepository
-
 <PageTitle>Home</PageTitle>
 @if (IsProcessing)
 {
@@ -29,7 +28,6 @@ else
                 </div>
             </div>
         </div>
-
         <div class="content px-4 m-2">
             <ul class="nav nav-underline justify-content-center mb-2">
                 <li class="nav-item">
@@ -47,7 +45,6 @@ else
 
             </ul>
             <div class="row mt-4 mx-1">
-
                 @foreach (var prod in FilteredProducts)
                 {
                     <div class="col-12 col-md-6 col-lg-4 pe-3 mb-5">
@@ -100,8 +97,6 @@ else
     private bool IsProcessing { get; set; } = true;
     private int _selectedCategoryId = 0;
     private string _searchText = "";
-
-
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -118,8 +113,6 @@ else
         Categories = await _categoryRepository.GetAllAsync();
         FilterProducts(0);
     }
-
-
     private void FilterProducts(int categoryId)
     {
         if (categoryId == 0)
@@ -135,7 +128,6 @@ else
             _searchText = String.Empty;
         }
     }
-
     private void FilterProductByName(string newValueOfSearchText)
     {
         if (string.IsNullOrWhiteSpace(newValueOfSearchText))
@@ -149,7 +141,6 @@ else
         }
         _searchText = newValueOfSearchText;
     }
-
     private string GetActiveTabClass(int categoryId)
     {
         return categoryId == _selectedCategoryId ? "active" : string.Empty;
