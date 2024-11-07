@@ -17,4 +17,5 @@ Generated/
 Thumbs.db
 .vscode/
 appsettings.json
+.env
 

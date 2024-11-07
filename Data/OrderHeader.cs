@@ -10,23 +10,23 @@ namespace BlazorApp2024.Data
     {
         public int Id { get; set; }
         [Required]
-        public string UserId { get; set; }
+        public string? UserId { get; set; }
         [Required]
         [Display(Name = "Order Total")]
         public double OrderTotal { get; set; }
         [Required]
         public DateTime OrderDate { get; set; }
         [Required]
-        public string Status { get; set; }
+        public string? Status { get; set; }
         [Display(Name = "Name")]
         [Required]
-        public string Name { get; set; }
+        public string? Name { get; set; }
         [Required]
         [Display(Name = "Phone Number")]
-        public string PhoneNumber { get; set; }
+        public string? PhoneNumber { get; set; }
         [Display(Name = "Email")]
         [Required]
-        public string Email { get; set; }
+        public string? Email { get; set; }
         public ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
 
     }
