@@ -1,9 +1,10 @@
+
 @page
 @model LoginModel
-{
+
+@{
     ViewData["Title"] = "Log in";
 }
-
 <div class="mt-4" style="height:100%">
     <div class="h-100 d-flex align-items-center justify-content-center">
         <div class="card bg-light" style="min-width: 28rem;">
@@ -36,51 +37,42 @@
                         </div>
 
                         <!-- Кнопка логіну -->
-                        <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary mb-2">Log
-                            in</button>
+                        <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary mb-2">Log in</button>
 
                         <!-- Лінки з меншим відступом -->
-                        <div class="text-center mb-0">
-                            <p class="mb-1"><a id="forgot-password" asp-page="./ForgotPassword">Forgot your
-                                    password?</a></p>
-                            <p class="mb-1"><a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as
-                                    a new user</a></p>
-                            <p class="mb-1"><a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend
-                                    email confirmation</a></p>
+                        <div class="text-center mb-0.1px">
+                            <p><a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a></p>
+                            <p><a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a></p>
+                            <p class="mb-1"><a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a></p>
                         </div>
                     </form>
                 </section>
             </div>
-
             <!-- Кнопки зовнішніх провайдерів -->
             <div class="h-100 d-flex align-items-center justify-content-center">
                 <section class="w-100 px-3">
-                    <hr class="mt-1"/>
+                    <hr />
                     @if ((Model.ExternalLogins?.Count ?? 0) == 0)
                     {
                         <div class="text-center">
-                            <p>There are no external authentication services configured. See this <a
-                                    href="https://go.microsoft.com/fwlink/?LinkID=532715">article about setting up this
-                                    ASP.NET application to support logging in via external services</a>.</p>
+                            <p>There are no external authentication services configured. See this <a href="https://go.microsoft.com/fwlink/?LinkID=532715">article about setting up this ASP.NET application to support logging in via external services</a>.</p>
                         </div>
                     }
                     else
                     {
-                        <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl"
-                            method="post" class="form-horizontal">
+                        <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
                             <div class="d-grid gap-2">
                                 @foreach (var provider in Model.ExternalLogins!)
                                 {
                                     <!-- Зміст кнопки з меншими відступами -->
-                                    <button type="submit" class="btn btn-outline-dark w-100 mb-1" name="provider"
-                                        value="@provider.Name" title="Log in using your @provider.DisplayName account">
-                                        Connect <span class="d-none d-sm-inline">with a @provider.DisplayName</span>
+                                    <button type="submit" class="btn btn-outline-dark w-100 mb-1" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">
+                                        Connect <span class="d-none d-sm-inline">with @provider.DisplayName</span>
                                     </button>
                                 }
                             </div>
                         </form>
                         <hr />
-                        <p class="text-center mt-1">
+                        <p class="text-center mt-2">
                             <small class="text-muted">
                                 Don't have an account yet?
                                 <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Sign Up</a>
@@ -92,6 +84,7 @@
         </div>
     </div>
 </div>
+
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

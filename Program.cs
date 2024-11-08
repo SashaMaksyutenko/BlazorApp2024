@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using BlazorApp2024.Services;
 using DotNetEnv;
 var builder = WebApplication.CreateBuilder(args);
+DotNetEnv.Env.Load();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
