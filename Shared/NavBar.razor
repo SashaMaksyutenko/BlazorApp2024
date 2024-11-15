@@ -10,7 +10,7 @@
 			YumBlazor
 		</a>
 		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
-				aria-controls="navbarCollapse" aria-label="Toggle navigation">
+			aria-controls="navbarCollapse" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
 		<div class="collapse navbar-collapse" id="navbarCollapse">
@@ -40,10 +40,10 @@
 							</NavLink>
 						</li>
 						<li class="nav-item">
-							<form action="Identity/Account/Logout" method="post">
+							<form action="Identity/Account/Logout" method="GET">
 								<AntiforgeryToken />
-								<input type="hidden" name="ReturnUrl" value="" />
-								<button type="submit" class="nav-link btn btn-success">
+								<input type="hidden" name="ReturnUrl" />
+								<button type="submit" class="nav-link">
 									<span class="bi bi-arrow-bar-left-nav-menu" aria-hidden="true"></span> Logout
 								</button>
 							</form>
@@ -68,7 +68,7 @@
 </nav>
 
 
-@code{
+@code {
 	protected override void OnInitialized()
 	{
 		_sharedstateService.OnChange += OnSharedStateChange;
@@ -85,8 +85,8 @@
 		var authState = await _authStateProvider.GetAuthenticationStateAsync();
 		var user = authState.User;
 
-		_sharedstateService.TotalCartCount = 
-		await _shoppingCartRepository.GetTotalCartCartCountAsync(user?.FindFirst(u=>u.Type.Contains("nameidentifier"))?.Value);
+		_sharedstateService.TotalCartCount =
+		await _shoppingCartRepository.GetTotalCartCartCountAsync(user?.FindFirst(u => u.Type.Contains("nameidentifier"))?.Value);
 
 	}
 	public void Dispose()

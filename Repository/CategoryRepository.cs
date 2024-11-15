@@ -1,11 +1,13 @@
+using Microsoft.EntityFrameworkCore;
 using BlazorApp2024.Data;
 using BlazorApp2024.Repository.IRepository;
-using Microsoft.EntityFrameworkCore;
+
 namespace BlazorApp2024.Repository
 {
-    public class CategoryRepository : ICategoryRepository
-    {
+	public class CategoryRepository : ICategoryRepository
+	{
 		private readonly ApplicationDbContext _db;
+
         public CategoryRepository(ApplicationDbContext db)
         {
 			_db = db;

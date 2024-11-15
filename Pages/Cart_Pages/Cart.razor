@@ -157,8 +157,7 @@ else
     private async Task UpdateCartItem(int productId, int updateBy)
     {
         //add item to cart
-        var result = await
-        _cartRepository.UpdateCartAsync(OrderHeader.UserId, productId, updateBy);
+        var result = await _cartRepository.UpdateCartAsync(OrderHeader.UserId, productId, updateBy);
         _sharedStateService.TotalCartCount= await _cartRepository.GetTotalCartCartCountAsync(OrderHeader.UserId);
         await LoadCart();
     }
