@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using BlazorApp2024.Data;
-using BlazorApp2024.Repository.IRepository;
-namespace BlazorApp2024.Repository
+using BlazorApp1.Data;
+using BlazorApp1.Repository.IRepository;
+namespace BlazorApp1.Repository
 {
     public class ShoppingCartRepository : IShoppingCartRepository
     {

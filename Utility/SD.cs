@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using BlazorApp2024.Data;
-namespace BlazorApp2024.Utility
+using BlazorApp1.Data;
+namespace BlazorApp1.Utility
 {
     public static class SD
     {

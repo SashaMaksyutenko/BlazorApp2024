@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using BlazorApp2024.Data;
-using BlazorApp2024.Repository.IRepository;
-namespace BlazorApp2024.Repository
+using BlazorApp1.Data;
+using BlazorApp1.Repository.IRepository;
+namespace BlazorApp1.Repository
 {
 	public class ProductRepository : IProductRepository
 	{
@@ -34,6 +34,7 @@ namespace BlazorApp2024.Repository
 			}
 			return false;
 		}
+
 		public async Task<Product> GetAsync(int id)
 		{
 			var obj = await _db.Product.FirstOrDefaultAsync(u => u.Id == id);
@@ -43,10 +44,12 @@ namespace BlazorApp2024.Repository
 			}
 			return obj;
 		}
+
 		public async Task<IEnumerable<Product>> GetAllAsync()
 		{
 			return await _db.Product.Include(u=>u.Category).ToListAsync();
 		}
+
 		public async Task<Product> UpdateAsync(Product obj)
 		{
 			var objFromDb = await _db.Product.FirstOrDefaultAsync(u => u.Id == obj.Id);

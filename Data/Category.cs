@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 
-namespace BlazorApp2024.Data
+namespace BlazorApp1.Data
 {
     public class Category
     {

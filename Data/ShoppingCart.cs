@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BlazorApp2024.Data
+namespace BlazorApp1.Data
 {
     public class ShoppingCart
     {

@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace BlazorApp2024.Data
+namespace BlazorApp1.Data
 {
     public class Product
     {

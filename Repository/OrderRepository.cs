@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BlazorApp2024.Data;
-using BlazorApp2024.Repository.IRepository;
+using BlazorApp1.Data;
+using BlazorApp1.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
 
-namespace BlazorApp2024.Repository
+namespace BlazorApp1.Repository
 {
     public class OrderRepository : IOrderRepository
     {
