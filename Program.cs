@@ -1,6 +1,8 @@
+
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using BlazorApp1.Components;
 using BlazorApp1.Components.Account;
 using BlazorApp1.Data;
@@ -9,14 +11,47 @@ using BlazorApp1.Repository.IRepository;
 using BlazorApp1.Repository;
 using Radzen;
 using BlazorApp1.Services;
+using Microsoft.Extensions.Logging;
 var builder = WebApplication.CreateBuilder(args);
+
+// Налаштування логування
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
+
+// Завантаження змінних середовища
 DotNetEnv.Env.Load();
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ??
-    throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
+
+var loggerFactory = LoggerFactory.Create(logging =>
+{
+    logging.AddConsole();
+    logging.AddDebug();
+});
+var logger = loggerFactory.CreateLogger<Program>();
+
+try
+{
+    // Завантаження рядка підключення
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ??
+        throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+
+    // Налаштування DbContext
+    builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        options.UseSqlServer(connectionString)
+               .EnableSensitiveDataLogging() // Для більш детальних логів
+               .EnableDetailedErrors(),      // Показує більше інформації про помилки
+        ServiceLifetime.Scoped);
+
+    logger.LogInformation("Database connection configured successfully.");
+}
+catch (Exception ex)
+{
+    logger.LogError(ex, "Error during database connection configuration.");
+    throw;
+}
+
+// Додавання сервісів
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-// Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddCascadingAuthenticationState();
@@ -39,24 +74,20 @@ builder.Services.AddAuthentication(options =>
         options.AppId = Env.GetString("FACEBOOK_APP_ID");
         options.AppSecret = Env.GetString("FACEBOOK_APP_SECRET");
     })
-    .AddMicrosoftAccount(
-        options =>
+    .AddMicrosoftAccount(options =>
     {
         options.ClientId = Env.GetString("MICROSOFT_CLIENT_ID");
         options.ClientSecret = Env.GetString("MICROSOFT_CLIENT_SECRET");
-    }
-    ).AddGoogle(
-        options =>
+    })
+    .AddGoogle(options =>
     {
         options.ClientId = Env.GetString("GOOGLE_CLIENT_ID");
         options.ClientSecret = Env.GetString("GOOGLE_CLIENT_SECRET");
-    }
-    )
+    })
     .AddIdentityCookies();
 
-
 builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
-.AddRoles<IdentityRole>()
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddSignInManager()
     .AddDefaultTokenProviders();
@@ -64,25 +95,47 @@ builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSe
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+try
 {
-    app.UseMigrationsEndPoint();
-}
-else
-{
-    app.UseExceptionHandler("/Error", createScopeForErrors: true);
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
-}
-app.UseHttpsRedirection();
-app.UseAntiforgery();
-app.UseAuthentication();
-app.UseAuthorization();
-app.MapStaticAssets();
-app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
-// Add additional endpoints required by the Identity /Account Razor components.
-app.MapAdditionalIdentityEndpoints();
+    // Налаштування HTTP-запитів
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseMigrationsEndPoint();
+    }
+    else
+    {
+        app.UseExceptionHandler("/Error", createScopeForErrors: true);
+        app.UseHsts();
+    }
 
-app.Run();
+    // HTTPS Redirection з логуванням
+    try
+    {
+        app.UseHttpsRedirection();
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "Error during HTTPS redirection configuration.");
+        throw;
+    }
+
+    app.UseAntiforgery();
+    app.UseAuthentication();
+    app.UseAuthorization();
+    app.MapStaticAssets();
+    app.MapRazorComponents<App>()
+        .AddInteractiveServerRenderMode();
+
+    // Додаткові ендпоінти для Identity
+    app.MapAdditionalIdentityEndpoints();
+
+    logger.LogInformation("Application started successfully.");
+    app.Run();
+}
+catch (Exception ex)
+{
+    logger.LogCritical(ex, "Application failed to start.");
+    throw;
+}
+
+
