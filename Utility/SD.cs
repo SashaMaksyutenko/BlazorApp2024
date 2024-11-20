@@ -7,6 +7,7 @@ namespace BlazorApp1.Utility
         public static readonly string Role_Admin = "Admin";
         public static readonly string Role_Customer = "Customer";
         public static string StatusPending = "Pending";
+        public static string StatusApproved = "Approved";
         public static string StatusReadyForPickUp = "ReadyForPickUp";
         public static string StatusCompleted = "Completed";
         public static string StatusCancelled = "Cancelled";
